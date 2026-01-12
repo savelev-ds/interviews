@@ -24,12 +24,66 @@ public class CommasAndDashes {
         return result.deleteCharAt(result.length() - 1).toString();
     }
 
+    private static String decode2(String inputString) {
+
+        StringBuilder result = new StringBuilder();
+        int currentIndex = 0;
+        StringBuilder currentNumber = new StringBuilder();
+
+        while (currentIndex < inputString.length()) {
+
+            if (inputString.charAt(currentIndex) == ',') {
+                result.append(currentNumber).append(",");
+                currentNumber = new StringBuilder();
+                currentIndex++;
+
+            } else if (inputString.charAt(currentIndex) == '-') {
+                int startNumber = Integer.decode(currentNumber.toString());
+                StringBuilder endNumberString = new StringBuilder();
+                while (++currentIndex < inputString.length() && inputString.charAt(currentIndex) != ',') {
+                    endNumberString.append(inputString.charAt(currentIndex));
+                }
+                int currentNumberInDashPart = startNumber;
+                int endNumber = Integer.decode(endNumberString.toString());
+                do {
+                    result.append(currentNumberInDashPart);
+                    result.append(",");
+                } while (++currentNumberInDashPart <= endNumber);
+                currentNumber = new StringBuilder();
+                currentIndex++;
+
+            } else {
+                currentNumber.append(inputString.charAt(currentIndex));
+                currentIndex++;
+            }
+
+        }
+
+        if (!currentNumber.isEmpty()) {
+            result.append(currentNumber).append(",");
+        }
+
+        return result.deleteCharAt(result.length() - 1).toString();
+    }
+
     public static void main(String[] args) {
-        System.out.println(decode("1"));
-        System.out.println(decode("1,2"));
-        System.out.println(decode("4-8"));
-        System.out.println(decode("1,5-6"));
-        System.out.println(decode("10,15-16,18,19,21-24"));
+//        System.out.println(decode("1"));
+//        System.out.println(decode("1,2"));
+//        System.out.println(decode("4-8"));
+//        System.out.println(decode("1,5-6"));
+//        System.out.println(decode("10,15-16,18,19,21-24"));
+//
+//        System.out.println("----");
+
+        System.out.println(decode2("18-20,101-105"));
+        System.out.println(decode2("18-20,101-105,107"));
+        System.out.println(decode2("1"));
+        System.out.println(decode2("123"));
+        System.out.println(decode2("1,2"));
+        System.out.println(decode2("4-8"));
+        System.out.println(decode2("1,5-6"));
+        System.out.println(decode2("10,15-16,18,19,21-24"));
+
     }
 
 }
